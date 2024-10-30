@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from data.fetch_data import fetch_data
 from utils.preprocessing import clean_data, feature_engineering, normalize_data
 from models.neural_network import build_model
-from utils.visualization import plot_training_loss, plot_predictions
+from utils.visualization import plot_training_loss, plot_predictions, plot_volatility_surface
 
 # Step 1: Fetch the data
 calls_df, puts_df = fetch_data()
@@ -36,5 +36,11 @@ print(f"Test Loss: {loss}")
 predictions = model.predict(X_test)
 plot_training_loss(history)
 plot_predictions(y_test, predictions)
+
+# Convert Series to NumPy arrays and ensure they are 1D
+y_test_np = y_test.values.flatten()  # Flatten to ensure it is 1D
+predictions_np = predictions.flatten()  # Flatten to ensure it is 1D
+
+plot_volatility_surface(y_test, predictions)
 
 model.save('models/option_pricing_model.h5')
